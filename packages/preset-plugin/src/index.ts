@@ -19,13 +19,13 @@ export class PresetPlugin extends BasePlugin implements IPlugin {
 
   /**
    * Returns plugin name
-   * 
+   *
    * @returns String
    */
   public getName(): string {
     return 'PresetPlugin';
   }
-  
+
   /**
    * - Called automatically via BasePlugin.attach() -
    * The function execute on initialize the picker
@@ -81,8 +81,8 @@ export class PresetPlugin extends BasePlugin implements IPlugin {
   /**
    * Function `view` event
    * Adds HTML layout of current plugin to the picker layout
-   * 
-   * @param event 
+   *
+   * @param event
    */
   private onView(event: CustomEvent) {
     const { view, target }: IEventDetail = event.detail;
@@ -100,6 +100,7 @@ export class PresetPlugin extends BasePlugin implements IPlugin {
           item.innerHTML = itemKey;
           item.dataset.start = values[0].getTime();
           item.dataset.end = values[1].getTime();
+          item.dataset.label = itemKey;
 
           container.appendChild(item);
 
@@ -115,8 +116,8 @@ export class PresetPlugin extends BasePlugin implements IPlugin {
 
   /**
    * Handle click event
-   * 
-   * @param event 
+   *
+   * @param event
    */
   private onClick(event) {
     const target = event.target;
@@ -128,6 +129,7 @@ export class PresetPlugin extends BasePlugin implements IPlugin {
       if (this.isPresetButton(element)) {
         const startDate = new DateTime(Number(element.dataset.start));
         const endDate = new DateTime(Number(element.dataset.end));
+        const label = element.dataset.label;
 
         if (this.picker.options.autoApply) {
           this.picker.setDateRange(startDate, endDate);
@@ -135,6 +137,7 @@ export class PresetPlugin extends BasePlugin implements IPlugin {
           this.picker.trigger('select', {
             start: this.picker.getStartDate(),
             end: this.picker.getEndDate(),
+            label,
           });
 
           this.picker.hide();
@@ -152,8 +155,8 @@ export class PresetPlugin extends BasePlugin implements IPlugin {
 
   /**
    * Determines if HTMLElement is preset buttons
-   * 
-   * @param element 
+   *
+   * @param element
    * @returns Boolean
    */
   private isPresetButton(element: HTMLElement) {
